@@ -15,6 +15,7 @@ html { scroll-behavior: smooth; }
 
 body {
     margin: 0;
+    min-width: 320px;
     font-family: "Source Sans 3", system-ui, sans-serif;
     background:
         radial-gradient(1200px 480px at 8% -8%, #fff8e4 0%, transparent 55%),
@@ -36,7 +37,7 @@ body {
 .skip:focus { top: 1rem; }
 
 .hero {
-    width: min(920px, calc(100% - 2.5rem));
+    width: min(1120px, calc(100% - 2.5rem));
     margin: 0 auto;
     padding: 4rem 0 1.5rem;
 }
@@ -66,17 +67,22 @@ h1 {
     font-size: 1.15rem;
 }
 
-.toc {
+.toc-bar {
     position: sticky;
     top: 0;
     z-index: 5;
-    display: flex;
-    gap: 0.4rem;
-    overflow-x: auto;
-    padding: 0.75rem 1.25rem;
     background: color-mix(in srgb, var(--bg) 88%, white);
     border-bottom: 1px solid rgba(196, 122, 18, 0.2);
     backdrop-filter: blur(10px);
+}
+
+.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    width: min(1120px, calc(100% - 2.5rem));
+    margin: 0 auto;
+    padding: 0.75rem 0;
 }
 
 .toc a {
@@ -227,7 +233,7 @@ h1 {
 }
 
 footer {
-    width: min(920px, calc(100% - 2.5rem));
+    width: min(1120px, calc(100% - 2.5rem));
     margin: 0 auto;
     padding: 3rem 0 2.5rem;
     color: var(--muted);
