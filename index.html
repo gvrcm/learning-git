@@ -3,10 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning Git</title>
+    <title>Git cheat sheet — Learning Git</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Learning Git</h1>
-    <p>This is a simple website to learn Git and GitHub as part of AI and Design System Course</p>
+    <a class="skip" href="#concepts">Skip to concepts</a>
+
+    <header class="hero">
+        <p class="eyebrow">AI and Design System Course</p>
+        <h1>Git cheat sheet</h1>
+        <p class="lede">A vanilla HTML, CSS, and JavaScript guide to every concept on the slide. Each one has a plain-language explanation, things to watch for, an SVG animation (GSAP), and a few trusted resources.</p>
+    </header>
+
+    <nav class="toc" aria-label="Concepts">
+        <a href="#repository">Repo</a>
+        <a href="#clone">Clone</a>
+        <a href="#branch">Branch</a>
+        <a href="#commit">Commit</a>
+        <a href="#push-pull">Push / Pull</a>
+        <a href="#diff">Diff</a>
+        <a href="#merge">Merge</a>
+        <a href="#rebase">Rebase</a>
+        <a href="#merge-conflict">Conflict</a>
+        <a href="#pull-request">PR</a>
+        <a href="#issue">Issue</a>
+    </nav>
+
+    <main id="concepts">
+        <article class="concept" id="repository">
+            <div class="concept-copy">
+                <p class="kicker">01</p>
+                <h2>Repository <span>(repo)</span></h2>
+                <p class="cmd"><code>git init</code> · then host it on GitHub</p>
+                <h3>What it does</h3>
+                <p>A repository is the project folder Git is tracking. Locally it is a directory plus a hidden <code>.git</code> database of history. Remotely it is that same project hosted on GitHub, GitLab, or similar, so other people can clone, review, and contribute.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Add a <code>.gitignore</code> before the first commit so secrets, <code>node_modules</code>, and build output never enter history.</li>
+                    <li>One repo, one product. Avoid dumping unrelated projects into the same history.</li>
+                    <li>README, license, and a clear default branch (<code>main</code>) make the repo usable the moment someone lands on it.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository">Pro Git: Getting a Git repository</a></li>
+                    <li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories">GitHub: About repositories</a></li>
+                    <li><a href="https://git-scm.com/docs/gitignore">git-scm: gitignore</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>A folder becomes a Git repo, then connects to a host.</figcaption>
+                <div class="scene" data-scene="repository">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <text class="label" x="86" y="36">your machine</text>
+                        <text class="label" x="430" y="36">GitHub et al</text>
+                        <g class="folder">
+                            <path fill="#e8c48a" d="M70 88h90l20 18h150v140H70z"/>
+                            <path fill="#f7e7c2" d="M70 118h260v128H70z"/>
+                            <rect class="file f1" x="96" y="140" width="88" height="12" rx="3" fill="#c47a12"/>
+                            <rect class="file f2" x="96" y="162" width="140" height="12" rx="3" fill="#1c140c" opacity="0.35"/>
+                            <rect class="file f3" x="96" y="184" width="110" height="12" rx="3" fill="#1c140c" opacity="0.35"/>
+                        </g>
+                        <g class="git-badge">
+                            <rect x="214" y="200" width="86" height="28" rx="14" fill="#1c140c"/>
+                            <text x="257" y="219" text-anchor="middle" fill="#f6f1dc" font-size="13" font-family="IBM Plex Mono, monospace">.git</text>
+                        </g>
+                        <path class="link-line" d="M340 176 C390 176 400 176 430 176" fill="none" stroke="#c47a12" stroke-width="3"/>
+                        <g class="host">
+                            <rect x="430" y="108" width="160" height="136" rx="18" fill="#1c140c"/>
+                            <circle cx="510" cy="156" r="22" fill="#c47a12"/>
+                            <text x="510" y="214" text-anchor="middle" fill="#f6f1dc" font-size="14">origin</text>
+                        </g>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="clone">
+            <div class="concept-copy">
+                <p class="kicker">02</p>
+                <h2>Clone</h2>
+                <p class="cmd"><code>git clone git@github.com:org/repo.git</code></p>
+                <h3>What it does</h3>
+                <p>Clone downloads a full copy of a hosted repository onto your machine: the files at <code>HEAD</code>, the commit history, and a remote named <code>origin</code> pointing back at the host. After a clone you can branch, commit, and (if you have access) push.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Prefer SSH keys for frequent work; HTTPS is fine for a one-off download.</li>
+                    <li>Cloning a fork is different from cloning the upstream repo. Know which remote you will push to.</li>
+                    <li>Huge histories can use <code>--depth 1</code> for a shallow clone, but you will lack older commits until you deepen it.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/docs/git-clone">git-scm: git clone</a></li>
+                    <li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">GitHub: Cloning a repository</a></li>
+                    <li><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">GitHub: SSH authentication</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>History copies from origin onto your laptop.</figcaption>
+                <div class="scene" data-scene="clone">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <text class="label" x="70" y="40">local</text>
+                        <text class="label" x="400" y="40">origin</text>
+                        <rect class="box local-box" x="48" y="58" width="220" height="200" rx="16" fill="#fffaf0" stroke="#e8c48a" stroke-width="2"/>
+                        <rect class="box origin-box" x="372" y="58" width="220" height="200" rx="16" fill="#1c140c"/>
+                        <g class="origin-graph" fill="#f6f1dc">
+                            <line x1="420" y1="160" x2="546" y2="160" stroke="#c47a12" stroke-width="4"/>
+                            <circle class="oc o1" cx="430" cy="160" r="12"/>
+                            <circle class="oc o2" cx="486" cy="160" r="12"/>
+                            <circle class="oc o3" cx="542" cy="160" r="12"/>
+                        </g>
+                        <g class="copies" fill="#c47a12">
+                            <circle class="copy c1" cx="430" cy="160" r="12"/>
+                            <circle class="copy c2" cx="486" cy="160" r="12"/>
+                            <circle class="copy c3" cx="542" cy="160" r="12"/>
+                        </g>
+                        <text class="clone-label" x="158" y="168" text-anchor="middle" fill="#4a3d32" font-size="14">empty folder</text>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="branch">
+            <div class="concept-copy">
+                <p class="kicker">03</p>
+                <h2>Branch</h2>
+                <p class="cmd"><code>git switch -c feature/hero</code></p>
+                <h3>What it does</h3>
+                <p>A branch is a movable pointer to a commit, which gives you a safe parallel timeline. Work on the branch without touching <code>main</code> until you intentionally combine them. GitHub uses branches as the unit of a pull request.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Keep branches short-lived. The longer they drift from <code>main</code>, the harder they are to merge.</li>
+                    <li>Name them after the work (<code>fix/nav-overlap</code>, <code>feat/dark-mode</code>), not after yourself.</li>
+                    <li>Do not commit directly to <code>main</code> on a shared repo. Branch first, even for a one-line change.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell">Pro Git: Branches in a nutshell</a></li>
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches">GitHub: About branches</a></li>
+                    <li><a href="https://githubflow.github.io/">GitHub Flow</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>A gold feature line splits off main.</figcaption>
+                <div class="scene" data-scene="branch">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <text class="label main-label" x="48" y="198">main</text>
+                        <text class="label feat-label" x="48" y="88">feature</text>
+                        <path class="main-line" d="M80 180 H560" fill="none" stroke="#1c140c" stroke-width="5" stroke-linecap="round"/>
+                        <path class="feat-line" d="M250 180 C250 180 250 110 320 110 H520" fill="none" stroke="#c47a12" stroke-width="5" stroke-linecap="round"/>
+                        <circle class="mc m1" cx="140" cy="180" r="13" fill="#1c140c"/>
+                        <circle class="mc m2" cx="250" cy="180" r="13" fill="#1c140c"/>
+                        <circle class="mc m3" cx="430" cy="180" r="13" fill="#1c140c"/>
+                        <circle class="fc f1" cx="360" cy="110" r="13" fill="#c47a12"/>
+                        <circle class="fc f2" cx="470" cy="110" r="13" fill="#c47a12"/>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="commit">
+            <div class="concept-copy">
+                <p class="kicker">04</p>
+                <h2>Commit</h2>
+                <p class="cmd"><code>git add -p && git commit -m "Fix hero contrast"</code></p>
+                <h3>What it does</h3>
+                <p>A commit is a snapshot of the project plus a message describing why it changed. Git stores a pointer to the tree of files, the parent commit, the author, and the time. History is a chain of these snapshots.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Make commits small and reviewable: one idea per snapshot.</li>
+                    <li>Write the message for a future teammate (including you). Say why, not only what.</li>
+                    <li>Stage with intent. <code>git add .</code> is easy to over-commit with; <code>git add -p</code> lets you choose hunks.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/docs/git-commit">git-scm: git commit</a></li>
+                    <li><a href="https://cbea.ms/git-commit/">Chris Beams: How to write a git commit message</a></li>
+                    <li><a href="https://www.conventionalcommits.org/">Conventional Commits</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>Loose files freeze into a snapshot on the timeline.</figcaption>
+                <div class="scene" data-scene="commit">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <g class="files">
+                            <rect class="file" x="70" y="70" width="120" height="54" rx="8" fill="#fffaf0" stroke="#c47a12"/>
+                            <text x="130" y="102" text-anchor="middle" font-size="13">index.html</text>
+                            <rect class="file" x="70" y="136" width="120" height="54" rx="8" fill="#fffaf0" stroke="#c47a12"/>
+                            <text x="130" y="168" text-anchor="middle" font-size="13">styles.css</text>
+                            <rect class="file" x="70" y="202" width="120" height="54" rx="8" fill="#fffaf0" stroke="#c47a12"/>
+                            <text x="130" y="234" text-anchor="middle" font-size="13">app.js</text>
+                        </g>
+                        <path class="main-line" d="M280 160 H600" fill="none" stroke="#1c140c" stroke-width="5"/>
+                        <circle class="old" cx="330" cy="160" r="12" fill="#1c140c"/>
+                        <circle class="old" cx="410" cy="160" r="12" fill="#1c140c"/>
+                        <g class="snapshot">
+                            <circle cx="500" cy="160" r="22" fill="#c47a12"/>
+                            <text x="500" y="165" text-anchor="middle" fill="#fffaf0" font-size="11">snap</text>
+                        </g>
+                        <g class="msg">
+                            <rect x="430" y="42" width="170" height="44" rx="8" fill="#1c140c"/>
+                            <text x="515" y="69" text-anchor="middle" fill="#f6f1dc" font-size="12">Fix hero contrast</text>
+                        </g>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="push-pull">
+            <div class="concept-copy">
+                <p class="kicker">05</p>
+                <h2>Push / Pull</h2>
+                <p class="cmd"><code>git push -u origin HEAD</code> · <code>git pull</code></p>
+                <h3>What it does</h3>
+                <p>Push uploads your local commits to the hosted repository. Pull downloads new commits from the host and updates your current branch (fetch + integrate). Together they keep local and remote in sync.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Pull before you push if others work on the same branch, or you will be asked to integrate first.</li>
+                    <li>Never <code>git push --force</code> to <code>main</code>. Force-with-lease is safer, and still reserved for branches you own.</li>
+                    <li><code>git fetch</code> is pull without merging. Use it when you want to inspect incoming work first.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/docs/git-push">git-scm: git push</a></li>
+                    <li><a href="https://git-scm.com/docs/git-pull">git-scm: git pull</a></li>
+                    <li><a href="https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository">GitHub: Pushing commits</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>Commits travel up on push, then a new one travels down on pull.</figcaption>
+                <div class="scene" data-scene="push-pull">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <text class="label" x="80" y="36">local</text>
+                        <text class="label" x="80" y="168">origin</text>
+                        <line x1="120" y1="88" x2="420" y2="88" stroke="#1c140c" stroke-width="4"/>
+                        <line x1="120" y1="220" x2="420" y2="220" stroke="#1c140c" stroke-width="4"/>
+                        <circle cx="160" cy="88" r="11" fill="#1c140c"/>
+                        <circle cx="230" cy="88" r="11" fill="#1c140c"/>
+                        <circle class="local-new" cx="300" cy="88" r="12" fill="#c47a12"/>
+                        <circle cx="160" cy="220" r="11" fill="#f6f1dc" stroke="#1c140c" stroke-width="3"/>
+                        <circle cx="230" cy="220" r="11" fill="#f6f1dc" stroke="#1c140c" stroke-width="3"/>
+                        <circle class="pushed" cx="300" cy="220" r="12" fill="#c47a12"/>
+                        <circle class="remote-new" cx="370" cy="220" r="12" fill="#7a4a12"/>
+                        <circle class="pulled" cx="370" cy="88" r="12" fill="#7a4a12"/>
+                        <text class="push-tag" x="500" y="100" fill="#c47a12" font-size="16">push ↑</text>
+                        <text class="pull-tag" x="500" y="232" fill="#7a4a12" font-size="16">pull ↓</text>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="diff">
+            <div class="concept-copy">
+                <p class="kicker">06</p>
+                <h2>Diff</h2>
+                <p class="cmd"><code>git diff main...HEAD</code></p>
+                <h3>What it does</h3>
+                <p>A diff is the visual difference between two versions of the code. Git can compare working files to the index, the index to the last commit, or any two commits or branches. On GitHub, the Files changed tab of a pull request is a diff.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Read your own diff before you commit. It is the cheapest review you will get.</li>
+                    <li>Three-dot diffs (<code>main...branch</code>) show what the branch introduced since it diverged. Two-dot diffs compare tips directly.</li>
+                    <li>Whitespace-only noise can hide a real change. Use ignore-space options when the design tokens reflow.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/docs/git-diff">git-scm: git diff</a></li>
+                    <li><a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/viewing-and-comparing-commits/comparing-commits">GitHub: Comparing commits</a></li>
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-comparing-branches-in-pull-requests">GitHub: Comparing branches in PRs</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>Two versions of a file; one line is removed, one is added.</figcaption>
+                <div class="scene" data-scene="diff">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <text class="label" x="70" y="40">main</text>
+                        <text class="label" x="360" y="40">your branch</text>
+                        <rect x="48" y="56" width="250" height="200" rx="12" fill="#fffaf0" stroke="#e8c48a"/>
+                        <rect x="342" y="56" width="250" height="200" rx="12" fill="#fffaf0" stroke="#e8c48a"/>
+                        <text x="68" y="92" font-size="13" font-family="IBM Plex Mono, monospace">h1 {</text>
+                        <text class="old-line" x="68" y="122" font-size="13" font-family="IBM Plex Mono, monospace">  color: #111;</text>
+                        <text x="68" y="152" font-size="13" font-family="IBM Plex Mono, monospace">}</text>
+                        <text x="362" y="92" font-size="13" font-family="IBM Plex Mono, monospace">h1 {</text>
+                        <text class="new-line" x="362" y="122" font-size="13" font-family="IBM Plex Mono, monospace">  color: #c47a12;</text>
+                        <text x="362" y="152" font-size="13" font-family="IBM Plex Mono, monospace">}</text>
+                        <rect class="minus" x="48" y="104" width="250" height="28" fill="#f4c7c7" opacity="0"/>
+                        <rect class="plus" x="342" y="104" width="250" height="28" fill="#cdebc3" opacity="0"/>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="merge">
+            <div class="concept-copy">
+                <p class="kicker">07</p>
+                <h2>Merge</h2>
+                <p class="cmd"><code>git switch main && git merge feature/hero</code></p>
+                <h3>What it does</h3>
+                <p>Merge combines a branch back into another branch. Git finds a common ancestor and, if the changes do not collide, creates a new merge commit with two parents (or fast-forwards if nothing happened on the target).</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>A merge commit preserves the true parallel history. Squash merge on GitHub collapses the branch into one commit on <code>main</code>.</li>
+                    <li>Merge <code>main</code> into your feature branch often so the final merge stays small.</li>
+                    <li>If Git cannot combine both sides, you get a merge conflict instead of a clean merge.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/docs/git-merge">git-scm: git merge</a></li>
+                    <li><a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">Pro Git: Basic branching and merging</a></li>
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges">GitHub: About pull request merges</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>The feature line joins main; a merge commit has two parents.</figcaption>
+                <div class="scene" data-scene="merge">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <path class="main-line" d="M70 200 H560" fill="none" stroke="#1c140c" stroke-width="5"/>
+                        <path class="feat-line" d="M210 200 C210 110 280 110 350 110 H460 C500 110 500 200 540 200" fill="none" stroke="#c47a12" stroke-width="5"/>
+                        <circle cx="130" cy="200" r="12" fill="#1c140c"/>
+                        <circle cx="210" cy="200" r="12" fill="#1c140c"/>
+                        <circle class="fc f1" cx="350" cy="110" r="12" fill="#c47a12"/>
+                        <circle class="fc f2" cx="450" cy="110" r="12" fill="#c47a12"/>
+                        <circle class="mc" cx="390" cy="200" r="12" fill="#1c140c"/>
+                        <circle class="merge-node" cx="540" cy="200" r="18" fill="#c47a12"/>
+                        <text class="merge-label" x="540" y="255" text-anchor="middle" font-size="13">merge</text>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="rebase">
+            <div class="concept-copy">
+                <p class="kicker">08</p>
+                <h2>Rebase</h2>
+                <p class="cmd"><code>git fetch origin && git rebase origin/main</code></p>
+                <h3>What it does</h3>
+                <p>Rebase replays your commits on top of the latest <code>main</code>. Git peels your commits off, moves the base to the new tip, and reapplies each patch in order. The result is a linear history as if you had started from today’s main.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Do not rebase commits that other people already pulled. Rewriting shared history forces everyone else to recover.</li>
+                    <li>Rebase feature branches you own to stay current. Prefer merge for public, long-lived branches.</li>
+                    <li>Conflicts still happen, but you resolve them commit-by-commit instead of all at once.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing">Pro Git: Rebasing</a></li>
+                    <li><a href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing">Atlassian: Merging vs. rebasing</a></li>
+                    <li><a href="https://git-scm.com/docs/git-rebase">git-scm: git rebase</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>Feature commits lift off the old base and replay after the new main tip.</figcaption>
+                <div class="scene" data-scene="rebase">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <path class="main-line" d="M70 210 H560" fill="none" stroke="#1c140c" stroke-width="5"/>
+                        <path class="old-path" d="M220 210 C220 120 260 120 310 120 H430" fill="none" stroke="#e8c48a" stroke-width="4"/>
+                        <circle cx="140" cy="210" r="12" fill="#1c140c"/>
+                        <circle cx="220" cy="210" r="12" fill="#1c140c"/>
+                        <circle class="new-main" cx="340" cy="210" r="12" fill="#1c140c"/>
+                        <circle class="rb r1" cx="310" cy="120" r="13" fill="#c47a12"/>
+                        <circle class="rb r2" cx="410" cy="120" r="13" fill="#c47a12"/>
+                        <text class="caption" x="320" y="54" text-anchor="middle" font-size="14">replay onto latest main</text>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="merge-conflict">
+            <div class="concept-copy">
+                <p class="kicker">09</p>
+                <h2>Merge conflict</h2>
+                <p class="cmd">markers: <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> <code>=======</code> <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code></p>
+                <h3>What it does</h3>
+                <p>A merge conflict means two changes touched the same lines (or one side edited a file the other deleted). Git stops and asks you to choose. You edit the file, remove the markers, then <code>git add</code> and continue the merge or rebase.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Read both sides. The goal is the intended design, not “whoever committed last.”</li>
+                    <li>Talk to the other author when the conflict is conceptual (two different button patterns, not two colors).</li>
+                    <li>After resolving, run the app. A conflict-free file can still be a broken layout.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts">GitHub: About merge conflicts</a></li>
+                    <li><a href="https://git-scm.com/docs/git-merge#_how_to_resolve_conflicts">git-scm: How to resolve conflicts</a></li>
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-on-github">Resolve a conflict on GitHub</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>Two edits hit the same line. You pick the result.</figcaption>
+                <div class="scene" data-scene="merge-conflict">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <rect x="40" y="50" width="200" height="160" rx="12" fill="#fffaf0" stroke="#1c140c"/>
+                        <rect x="420" y="50" width="200" height="160" rx="12" fill="#fffaf0" stroke="#c47a12"/>
+                        <text x="140" y="84" text-anchor="middle" font-size="13">main</text>
+                        <text x="520" y="84" text-anchor="middle" font-size="13">feature</text>
+                        <text class="left-val" x="140" y="140" text-anchor="middle" font-size="16" fill="#1c140c">color: blue</text>
+                        <text class="right-val" x="520" y="140" text-anchor="middle" font-size="16" fill="#c47a12">color: gold</text>
+                        <g class="result">
+                            <rect x="200" y="230" width="240" height="48" rx="10" fill="#1c140c"/>
+                            <text x="320" y="260" text-anchor="middle" fill="#f6f1dc" font-size="14">you choose: gold</text>
+                        </g>
+                        <path class="burst" d="M300 130 l20 -28 l8 30 l30 -8 l-18 28 l28 16 l-32 6 l2 30 l-24 -20 l-26 22 l4 -30 l-30 2 l24 -22z" fill="#c47a12"/>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="pull-request">
+            <div class="concept-copy">
+                <p class="kicker">10</p>
+                <h2>Pull Request <span>(PR)</span></h2>
+                <p class="cmd">GitHub: “please review and merge my branch”</p>
+                <h3>What it does</h3>
+                <p>A pull request is a conversation around a branch: the diff, checks, review comments, and the eventual merge into the target branch. It is the social layer on top of push, diff, and merge.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Keep PRs small enough to review in one sitting. Screenshots help for visual work.</li>
+                    <li>Describe the why, link the issue, and say how you tested. Reviewers should not have to reverse-engineer intent.</li>
+                    <li>Do not merge your own PR on a team without a look from someone else, unless the repo explicitly allows it.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">GitHub: About pull requests</a></li>
+                    <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews">GitHub: Pull request reviews</a></li>
+                    <li><a href="https://github.com/alphagov/govuk-design-system/blob/main/docs/pull-requests.md">GOV.UK Design System: Pull requests</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>A branch asks for review, checks pass, then it merges.</figcaption>
+                <div class="scene" data-scene="pull-request">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <path d="M60 230 H300" stroke="#1c140c" stroke-width="5"/>
+                        <path class="pr-branch" d="M160 230 C160 120 220 90 320 90" fill="none" stroke="#c47a12" stroke-width="5"/>
+                        <circle cx="100" cy="230" r="11" fill="#1c140c"/>
+                        <circle cx="160" cy="230" r="11" fill="#1c140c"/>
+                        <g class="pr-card">
+                            <rect x="320" y="48" width="270" height="150" rx="16" fill="#fffaf0" stroke="#1c140c" stroke-width="2"/>
+                            <text x="455" y="84" text-anchor="middle" font-size="16">PR #42 Hero contrast</text>
+                            <text class="status" x="455" y="118" text-anchor="middle" font-size="13" fill="#4a3d32">waiting for review</text>
+                            <circle class="avatar a1" cx="400" cy="150" r="14" fill="#e8c48a"/>
+                            <circle class="avatar a2" cx="436" cy="150" r="14" fill="#c47a12"/>
+                            <rect class="merge-btn" x="470" y="136" width="96" height="30" rx="8" fill="#1c140c"/>
+                            <text class="merge-btn-label" x="518" y="156" text-anchor="middle" fill="#f6f1dc" font-size="12">Merge</text>
+                        </g>
+                        <circle class="merged" cx="300" cy="230" r="16" fill="#c47a12"/>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+
+        <article class="concept" id="issue">
+            <div class="concept-copy">
+                <p class="kicker">11</p>
+                <h2>Issue</h2>
+                <p class="cmd">a ticket: bug, feature, or task</p>
+                <h3>What it does</h3>
+                <p>An issue is a tracked piece of work on GitHub: a bug, a feature, a design question, or a chore. It holds context, discussion, labels, and later a link to the pull request that closes it. Git stores history; issues store intent.</p>
+                <h3>Considerations</h3>
+                <ul>
+                    <li>Write a reproduction or a success condition. “Button looks wrong” is not enough; say where, in which viewport, and what “right” is.</li>
+                    <li>One issue, one outcome. Split “redesign the dashboard” into reviewable tickets.</li>
+                    <li>Link the PR with <code>Closes #12</code> so the issue archives itself when the work merges.</li>
+                </ul>
+                <h3>Resources</h3>
+                <ul class="resources">
+                    <li><a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues">GitHub: About issues</a></li>
+                    <li><a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue">Linking a pull request to an issue</a></li>
+                    <li><a href="https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository">Issue templates</a></li>
+                </ul>
+            </div>
+            <figure class="visual">
+                <figcaption>A ticket is filed, labeled, then linked to a pull request.</figcaption>
+                <div class="scene" data-scene="issue">
+                    <svg viewBox="0 0 640 300" role="img" aria-hidden="true">
+                        <text class="label" x="60" y="40">board</text>
+                        <rect x="48" y="56" width="170" height="210" rx="12" fill="#fffaf0" stroke="#e8c48a"/>
+                        <text x="133" y="84" text-anchor="middle" font-size="13">Backlog</text>
+                        <rect x="236" y="56" width="170" height="210" rx="12" fill="#fffaf0" stroke="#e8c48a"/>
+                        <text x="321" y="84" text-anchor="middle" font-size="13">In progress</text>
+                        <rect x="424" y="56" width="170" height="210" rx="12" fill="#fffaf0" stroke="#e8c48a"/>
+                        <text x="509" y="84" text-anchor="middle" font-size="13">Done</text>
+                        <g class="ticket">
+                            <rect x="66" y="104" width="134" height="88" rx="10" fill="#1c140c"/>
+                            <text x="133" y="138" text-anchor="middle" fill="#f6f1dc" font-size="13">#12 Hero</text>
+                            <text class="ticket-meta" x="133" y="162" text-anchor="middle" fill="#e8c48a" font-size="11">bug</text>
+                            <text class="ticket-pr" x="133" y="180" text-anchor="middle" fill="#f6f1dc" font-size="11"></text>
+                        </g>
+                    </svg>
+                </div>
+                <button type="button" class="replay">Replay animation</button>
+            </figure>
+        </article>
+    </main>
+
+    <footer>
+        <p>Learning Git — vanilla HTML, CSS, JavaScript, SVG, and GSAP. Built from the course cheat sheet.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <script src="animations.js"></script>
 </body>
 </html>
